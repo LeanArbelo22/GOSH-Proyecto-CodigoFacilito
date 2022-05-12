@@ -239,7 +239,7 @@ while True:
         new_best_score = main.score.score_text
         new_best_score_time = seconds
         change_best_score_file(score_file_content, best_score_file, new_best_score)
-        is_new_score()
+        # is_new_score()
     
     # Changing the flag
     if is_left:
