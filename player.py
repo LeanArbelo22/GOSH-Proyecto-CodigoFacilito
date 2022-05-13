@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.rect = pygame.Rect(self.pos_x, self.pos_y, PLAYER_WIDTH, PLAYER_HEIGHT)
-        self.speed = 4
+        self.speed = 5
         self.eat_sound = pygame.mixer.Sound('Sounds/eating.wav')        
         
     def draw_player(self, screen, ghost_img):

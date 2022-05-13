@@ -15,8 +15,8 @@ class Skulls(pygame.sprite.Sprite):
     def draw_skulls(self, screen):
         screen.blit(self.skull_img, self.rect)
                 
-    def dropping(self, speed):
-        self.rect.y += speed 
+    def dropping(self):
+        self.rect.y += self.speed 
     
                 
         

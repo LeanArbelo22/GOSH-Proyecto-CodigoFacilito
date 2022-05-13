@@ -26,25 +26,25 @@ clock = pygame.time.Clock()
 
 # Clouds image
 clouds_img_original = pygame.image.load('Images/clouds.png').convert_alpha()
-clouds_img = pygame.transform.scale(clouds_img_original, (700, 500)).convert_alpha()
+clouds_img = pygame.transform.scale(clouds_img_original, (700, 500))
 
 # Skull decoration
 decorator_img_original = pygame.image.load('Images/skull-decoration.png').convert_alpha()
-decorator_img_original2 = pygame.transform.scale(decorator_img_original, DECORATION_SIZE).convert_alpha()
-decorator_img = pygame.transform.flip(decorator_img_original2, True, False).convert_alpha()
+decorator_img_original2 = pygame.transform.scale(decorator_img_original, DECORATION_SIZE)
+decorator_img = pygame.transform.flip(decorator_img_original2, True, False)
 
 # Player image
 ghost_img_original = pygame.image.load('Images/ghost_player.png').convert_alpha()
-ghost_img_left = pygame.transform.scale(ghost_img_original, PLAYER_SIZE).convert_alpha()
-ghost_img_right = pygame.transform.flip(ghost_img_left, True, False).convert_alpha()
+ghost_img_left = pygame.transform.scale(ghost_img_original, PLAYER_SIZE)
+ghost_img_right = pygame.transform.flip(ghost_img_left, True, False)
 
 # Skull image
 skull_img_original = pygame.image.load('Images/skull_color.png').convert_alpha()
-skull_img = pygame.transform.scale(skull_img_original, ENEMY_SIZE).convert_alpha()
+skull_img = pygame.transform.scale(skull_img_original, ENEMY_SIZE)
 
 # Enemy image
 enemy_img_original = pygame.image.load('Images/heart.png').convert_alpha()
-enemy_img = pygame.transform.scale(enemy_img_original, ENEMY_SIZE).convert_alpha()
+enemy_img = pygame.transform.scale(enemy_img_original, ENEMY_SIZE)
 
 # Groups
 skull_group = pygame.sprite.Group()
@@ -128,8 +128,7 @@ while True:
         screen.fill(SKY_COLOR)
     elif main.score.score_text > 200:
         screen.fill(SKY_DARK)
-    
-                
+              
     # Adding some skulls to skull_group and defining some progressive levels   
     if is_on:      
         if len(skull_group) == 0:
@@ -156,7 +155,7 @@ while True:
                     skull = Skulls(skull_img, skull_group, randint(2, 3))
                     skull_group.add(skull)
             elif main.score.score_text >= 800 and main.score.score_text < 1200:
-                main.player.speed += 5
+                main.player.speed += 4
                 main.music.set_volume(0.3) # !!
                 main.bonus_music.play(2) # !!
                 for number in range(0, 60):
@@ -170,43 +169,47 @@ while True:
                     skull = Skulls(skull_img, skull_group, randint(2, 3))
                     skull_group.add(skull)
 
-    # Drawing skulls
-    for skull in skull_group:
-        skull.draw_skulls(screen)
-        skull.dropping(randint(2, 3))
-        # When they hit the floor
-        if skull.rect.y > (main.floor.floor_rect.top - CELL_SIZE):
-            skull_group.remove(skull)
-            main.score.score_text -= 1
-        # When they collied
-        elif pygame.sprite.spritecollide(main.player, skull_group, True):
-            skull_group.remove(skull)
-            main.play_music(main.player.eat_sound, 0)
-            main.score.score_text += 2
+        # Drawing skulls
+        for skull in skull_group:
+            skull.draw_skulls(screen)
+            skull.dropping()
+            # When they hit the floor
+            if skull.rect.y > (main.floor.floor_rect.top - CELL_SIZE):
+                skull_group.remove(skull)
+                main.score.score_text -= 1
+            # When they collied
+            elif pygame.sprite.spritecollide(main.player, skull_group, True):
+                skull_group.remove(skull)
+                main.play_music(main.player.eat_sound, 0)
+                main.score.score_text += 2
            
             
-    # Adding some enemies
-    if is_on:
+        # Adding some enemies
         if len(enemy_group) == 0:
-                for number in range(0, 3):           
-                    enemy = Skulls(enemy_img, enemy_group, randint(3, 8))
-                    enemy_group.add(enemy)
+                if main.score.score_text > 200 and main.score.score_text < 400:
+                    for number in range(0, 1):           
+                        enemy = Skulls(enemy_img, enemy_group, randint(3, 8))
+                        enemy_group.add(enemy)
+                else: 
+                    for number in range(0, 3):           
+                        enemy = Skulls(enemy_img, enemy_group, randint(3, 8))
+                        enemy_group.add(enemy)
                 # if the player fly to the top, more enemies drops
                 if main.player.rect.y < (SIZE / 3):
                     for number in range(2, 10):
-                        enemy = Skulls(enemy_img, enemy_group, randint(3, 8))
+                        enemy = Skulls(enemy_img, enemy_group, randint(2, 6))
                         enemy_group.add(enemy)
-                    
-    # Drawing enemies creating an instance of class Skulls
+                
+        # Drawing enemies creating an instance of class Skulls
         for enemy in enemy_group:
             enemy.draw_skulls(screen)
-            enemy.dropping(randint(3, 8))
+            enemy.dropping()
             # When they hit the floor
             if enemy.rect.y > (main.floor.floor_rect.top - CELL_SIZE):
                 enemy_group.remove(enemy)
                 main.score.score_text += 6
             # When they collied
-            elif pygame.sprite.spritecollide(main.player, enemy_group, True):
+            elif pygame.sprite.spritecollide(main.player, enemy_group, True) or main.score.score_text < 0:
                 enemy_group.remove(enemy)
                 main.reload(main.game_over_sound)
                 game_over = True
@@ -215,13 +218,14 @@ while True:
                 last_score = main.score.score_text
                 main.score.score_text = 0
                 time.sleep(1.1)
-
     
     # Draw elements
     main.draw_objects()
+    main.cloud.move_clouds()
     
+    # Time flag
     seconds = pygame.time.get_ticks() / 1000
-    #print(seconds)    
+    # print(seconds)    
     if seconds < 3:
         message_game_over('BEST SCORE: ' + str(score_file_content), int(SIZE / 2))
      
@@ -233,6 +237,7 @@ while True:
             message_game_over('Your score: ' + str(last_score), int(SIZE / 2 + CELL_SIZE))
             if main.score.score_text > int(score_file_content):
                 change_best_score_file(score_file_content, best_score_file, new_best_score)
+
                 
     # New best score
     if main.score.score_text > int(score_file_content):
@@ -287,7 +292,7 @@ while True:
     
     if event.type == pygame.KEYUP:
         main.player.down()
-        is_on = True
+        # is_on = True
     
     
     """ FOR A SECOND PLAYER
