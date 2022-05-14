@@ -22,7 +22,7 @@ Requisitos para correr el juego:
 - Pygame
   
 ### INICIAR EL JUEGO ###
-Para iniciar el juego se debe ejecutar el archivo *** main.py ***.
+Para iniciar el juego se debe ejecutar el archivo **main.py**.
 Se puede ejecutar el archivo desde VSCode o desde la terminal (posicionado en la carpeta del juego) con el comando:
 ` python3 main.py ` ó ` python main.py ` segun corresponda el funcionamiento de su terminal.
 
