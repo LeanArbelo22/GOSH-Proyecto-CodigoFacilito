@@ -1,3 +1,4 @@
+from collections import namedtuple
 import time
 import pygame, sys
 from score_file import *
@@ -20,6 +21,7 @@ screen = pygame.display.set_mode((SIZE, SIZE))
 
 # Font
 game_font = pygame.font.Font('Fonts/Super-Mario2.ttf', 20)
+game_font2 = pygame.font.Font('Fonts/Super-Mario2.ttf', 16)
 
 # Clock object
 clock = pygame.time.Clock()
@@ -59,8 +61,8 @@ is_on = False
 # Game over
 game_over = False
 
-def message_game_over(msg, go_y):
-    text = game_font.render(msg, False, (10, 0, 50))
+def message_game_over(msg, game_font, color, go_y):
+    text = game_font.render(msg, False, color)
     go_x = int(SIZE / 2)
     go_rect = text.get_rect(center = (go_x, go_y))
     screen.blit(text, go_rect)
@@ -75,9 +77,10 @@ best_score_file = path / 'best_score.txt'
 new_best_score = 0
 new_best_score_time = 0
 
+
 def is_new_score():
-    if seconds < new_best_score_time + 3:
-        return message_game_over('New highest score!', int(SIZE / 2))
+        return message_game_over('New highest score!', game_font2, (25, 50, 10), int(SIZE / 4))
+    
 
 # Main
 class Main():
@@ -96,7 +99,6 @@ class Main():
     def draw_objects(self):
         self.cloud.draw_clouds(screen, clouds_img)
         self.score.draw_score(game_font, screen)
-        self.score.draw_best_score(game_font, screen, ('BEST: ' + str(score_file_content)))
         self.floor.draw_floor(screen)
         
     def play_music(self, sound, repeat):
@@ -112,13 +114,17 @@ class Main():
 # Creating an instance of the class Main.
 main = Main()
 
+# current_score = main.score.score_text NOT WORKING
+
 # Musical theme
 main.play_music(main.music, -1)
+
+
 
 # Main Loop
 while True:
     score_file_content = read_best_score(best_score_file)
-    
+   
     """ if main.score.score_text > mejor_puntaje:
         new_best_score_time = seconds
         mejor_puntaje = main.score.score_text """
@@ -227,24 +233,33 @@ while True:
     seconds = pygame.time.get_ticks() / 1000
     # print(seconds)    
     if seconds < 3:
-        message_game_over('BEST SCORE: ' + str(score_file_content), int(SIZE / 2))
+        message_game_over('BEST SCORE: ' + str(score_file_content), game_font, (0, 0, 50), int(SIZE / 2))
      
     
     # Game over text
     if seconds < game_over_time + 4:
         if game_over == True:
-            message_game_over('GAME OVER', int(SIZE / 2 - CELL_SIZE))
-            message_game_over('Your score: ' + str(last_score), int(SIZE / 2 + CELL_SIZE))
+            message_game_over('GAME OVER', game_font, (0, 0, 50), int(SIZE / 2 - CELL_SIZE))
+            message_game_over('Your score: ' + str(last_score), game_font2, (0, 0, 50), int(SIZE / 2 + CELL_SIZE))
             if main.score.score_text > int(score_file_content):
                 change_best_score_file(score_file_content, best_score_file, new_best_score)
 
-                
-    # New best score
-    if main.score.score_text > int(score_file_content):
+
+    
+    before_new_score = 0
+
+    # New best score  
+    if main.score.score_text < int(score_file_content):
+        main.score.draw_best_score(game_font2, screen, ('BEST: ' + str(score_file_content)))  
+    elif main.score.score_text >= int(score_file_content):
         new_best_score = main.score.score_text
         new_best_score_time = seconds
-        change_best_score_file(score_file_content, best_score_file, new_best_score)
+        change_best_score_file(score_file_content, best_score_file, new_best_score)   
         # is_new_score()
+        main.score.draw_best_score(game_font2, screen, ('NEW HIGH SCORE!')) 
+    elif main.score.score_text == new_best_score:
+        main.score.draw_best_score(game_font2, screen, ('NEW HIGH SCORE!')) 
+
     
     # Changing the flag
     if is_left:
