@@ -1,8 +1,7 @@
-from collections import namedtuple
-import time
 import pygame, sys
-from score_file import *
+import time
 from constants import *
+from score_file import *
 from random import randint
 from floor import Floor
 from score import Score
@@ -243,10 +242,6 @@ while True:
             message_game_over('Your score: ' + str(last_score), game_font2, (0, 0, 50), int(SIZE / 2 + CELL_SIZE))
             if main.score.score_text > int(score_file_content):
                 change_best_score_file(score_file_content, best_score_file, new_best_score)
-
-
-    
-    before_new_score = 0
 
     # New best score  
     if main.score.score_text < int(score_file_content):
