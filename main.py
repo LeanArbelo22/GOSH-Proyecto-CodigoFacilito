@@ -158,7 +158,7 @@ while True:
                     skull_group.add(skull)
             elif main.score.score_text >= 400 and main.score.score_text < 600:
                 main.player.speed = 4
-                main.player.speed = 4
+                main.player2.speed = 4
                 main.bonus_music.stop()
                 main.music.set_volume(1) # !!
                 for number in range(0, 10):
@@ -170,7 +170,7 @@ while True:
                     skull_group.add(skull)
             elif main.score.score_text >= 800 and main.score.score_text < 1200:
                 main.player.speed += 4
-                main.player.speed += 4
+                main.player2.speed += 4
                 main.music.set_volume(0.3) # !!
                 main.bonus_music.play(2) # !!
                 for number in range(0, 60):
@@ -178,7 +178,7 @@ while True:
                     skull_group.add(skull)
             else:
                 main.player.speed = 5
-                main.player.speed = 5
+                main.player2.speed = 5
                 main.bonus_music.stop() # !!
                 main.music.set_volume(1) # !!
                 for number in range(0, 30):
