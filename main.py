@@ -40,6 +40,10 @@ ghost_img_original = pygame.image.load('Images/ghost_player.png').convert_alpha(
 ghost_img_left = pygame.transform.scale(ghost_img_original, PLAYER_SIZE)
 ghost_img_right = pygame.transform.flip(ghost_img_left, True, False)
 
+demon_img_original = pygame.image.load('Images/demon_player.png').convert_alpha()
+demon_img_left = pygame.transform.scale(demon_img_original, (120, 100))
+demon_img_right = pygame.transform.flip(demon_img_left, True, False)
+
 # Skull image
 skull_img_original = pygame.image.load('Images/skull_color.png').convert_alpha()
 skull_img = pygame.transform.scale(skull_img_original, ENEMY_SIZE)
@@ -110,7 +114,11 @@ class Main():
         enemy_group.empty()
         skull_group.empty()
         self.player.rect.x = (SIZE / 2)
+        self.player2.rect.x = (SIZE / 4)
+        
         self.player.rect.y = PLAYER_FLOOR
+        self.player2.rect.y = PLAYER_FLOOR
+        
         self.play_music(sound, 0)
         
 # Creating an instance of the class Main.
@@ -279,11 +287,11 @@ while True:
     # Changing the flag
     if is_left:
         main.player.draw_player(screen, ghost_img_left)
-        main.player2.draw_player(screen, ghost_img_left)
+        main.player2.draw_player(screen, demon_img_left)
         
     else:
         main.player.draw_player(screen, ghost_img_right)
-        main.player2.draw_player(screen, ghost_img_right)
+        main.player2.draw_player(screen,demon_img_right)
         
         
     # Decorator drawed after all other elements
