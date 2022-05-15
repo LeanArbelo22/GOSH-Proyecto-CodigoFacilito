@@ -89,7 +89,9 @@ class Main():
         self.score = Score()
         self.cloud = Clouds()
         self.decorator = Decorator(decorator_img)
-        self.player = Player(CELL_SIZE, PLAYER_FLOOR)
+        self.player = Player(CELL_SIZE * 3, PLAYER_FLOOR)
+        self.player2 = Player(CELL_SIZE * 12, PLAYER_FLOOR)
+        
         # Sounds and music
         self.music = pygame.mixer.Sound('Sounds/ghost-sounds-theremin.wav')
         self.bonus_music = pygame.mixer.Sound('Sounds/arcade-retro-run.wav')
@@ -140,12 +142,14 @@ while True:
                     skull_group.add(skull)
             elif main.score.score_text >= 200 and main.score.score_text < 400:
                 main.player.speed += 3
+                main.player2.speed += 3
                 main.music.set_volume(0.3) # !!
                 main.bonus_music.play(1) # !!
                 for number in range(0, 50):
                     skull = Skulls(skull_img, skull_group, randint(4, 5))
                     skull_group.add(skull)
             elif main.score.score_text >= 400 and main.score.score_text < 600:
+                main.player.speed = 4
                 main.player.speed = 4
                 main.bonus_music.stop()
                 main.music.set_volume(1) # !!
@@ -158,12 +162,14 @@ while True:
                     skull_group.add(skull)
             elif main.score.score_text >= 800 and main.score.score_text < 1200:
                 main.player.speed += 4
+                main.player.speed += 4
                 main.music.set_volume(0.3) # !!
                 main.bonus_music.play(2) # !!
                 for number in range(0, 60):
                     skull = Skulls(skull_img, skull_group, randint(5, 6))
                     skull_group.add(skull)
             else:
+                main.player.speed = 5
                 main.player.speed = 5
                 main.bonus_music.stop() # !!
                 main.music.set_volume(1) # !!
@@ -183,6 +189,11 @@ while True:
             elif pygame.sprite.spritecollide(main.player, skull_group, True):
                 skull_group.remove(skull)
                 main.play_music(main.player.eat_sound, 0)
+                main.score.score_text += 2
+            # SECOND PLAYER
+            elif pygame.sprite.spritecollide(main.player2, skull_group, True):
+                skull_group.remove(skull)
+                main.play_music(main.player2.eat_sound, 0)
                 main.score.score_text += 2
            
             
@@ -212,6 +223,16 @@ while True:
                 main.score.score_text += 6
             # When they collied
             elif pygame.sprite.spritecollide(main.player, enemy_group, True) or main.score.score_text < 0:
+                enemy_group.remove(enemy)
+                main.reload(main.game_over_sound)
+                game_over = True
+                game_over_time = seconds
+                # print(game_over_time)
+                last_score = main.score.score_text
+                main.score.score_text = 0
+                time.sleep(1.1)
+                # SECOND PLAYER
+            elif pygame.sprite.spritecollide(main.player2, enemy_group, True) or main.score.score_text < 0:
                 enemy_group.remove(enemy)
                 main.reload(main.game_over_sound)
                 game_over = True
@@ -258,8 +279,12 @@ while True:
     # Changing the flag
     if is_left:
         main.player.draw_player(screen, ghost_img_left)
+        main.player2.draw_player(screen, ghost_img_left)
+        
     else:
         main.player.draw_player(screen, ghost_img_right)
+        main.player2.draw_player(screen, ghost_img_right)
+        
         
     # Decorator drawed after all other elements
     main.decorator.draw_decorator(screen)
@@ -301,18 +326,27 @@ while True:
     
     if event.type == pygame.KEYUP:
         main.player.down()
-        # is_on = True
+        main.player2.down()
     
     
-    """ FOR A SECOND PLAYER
+    # FOR A SECOND PLAYER
     if key_pressed[pygame.K_a]:
         main.player2.left()
+        is_left = True
+        is_on = True
+        
     elif key_pressed[pygame.K_d]:
         main.player2.right()
+        is_left = False
+        is_on = True
+        
     elif key_pressed[pygame.K_w]:
         main.player2.up()
+        is_on = True
+        
     elif key_pressed[pygame.K_s]:
-        main.player2.down() """
+        main.player2.down()
+        is_on = True
         
     # Updating the display surface with all the elements that were drawn in the screen.
     pygame.display.update()
