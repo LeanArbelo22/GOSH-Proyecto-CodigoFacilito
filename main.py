@@ -13,7 +13,7 @@ from decoration import Decorator
 # Config
 """ pygame.mixer.pre_init(44100, -16, 2, 512) """
 pygame.init()
-pygame.display.set_caption("GOSH, Cari!")
+pygame.display.set_caption("GOSH!")
 
 # Display screen
 screen = pygame.display.set_mode((SIZE, SIZE))
@@ -216,7 +216,7 @@ while True:
                 main.reload(main.game_over_sound)
                 game_over = True
                 game_over_time = seconds
-                print(game_over_time)
+                # print(game_over_time)
                 last_score = main.score.score_text
                 main.score.score_text = 0
                 time.sleep(1.1)
