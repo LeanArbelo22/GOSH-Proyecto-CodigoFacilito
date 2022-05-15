@@ -21,6 +21,7 @@ screen = pygame.display.set_mode((SIZE, SIZE))
 # Font
 game_font = pygame.font.Font('Fonts/Super-Mario2.ttf', 20)
 game_font2 = pygame.font.Font('Fonts/Super-Mario2.ttf', 16)
+game_font3 = pygame.font.Font('Fonts/Hello-Madre.ttf', 90)
 
 # Clock object
 clock = pygame.time.Clock()
@@ -123,10 +124,6 @@ main.play_music(main.music, -1)
 # Main Loop
 while True:
     score_file_content = read_best_score(best_score_file)
-   
-    """ if main.score.score_text > mejor_puntaje:
-        new_best_score_time = seconds
-        mejor_puntaje = main.score.score_text """
         
     # Bg color of the screen    
     if main.score.score_text < 200:    
@@ -232,7 +229,9 @@ while True:
     seconds = pygame.time.get_ticks() / 1000
     # print(seconds)    
     if seconds < 3:
+        message_game_over('GOSH!', game_font3, (200,80,120), int(SIZE / 4))
         message_game_over('BEST SCORE: ' + str(score_file_content), game_font, (0, 0, 50), int(SIZE / 2))
+ 
      
     
     # Game over text
