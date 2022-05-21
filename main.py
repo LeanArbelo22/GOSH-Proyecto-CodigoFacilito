@@ -257,7 +257,7 @@ while True:
     # Time flag
     seconds = pygame.time.get_ticks() / 1000
     # print(seconds)    
-    if seconds < 3:
+    if seconds < 10:
         message_game_over('GOSH!', game_font3, (200,80,120), int(SIZE / 4))
         message_game_over('BEST SCORE: ' + str(score_file_content), game_font, (0, 0, 50), int(SIZE / 2))
  
